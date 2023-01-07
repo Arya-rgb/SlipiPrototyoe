@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1010192054884",
+    "project_id": "slipi-prototype",
+    "storage_bucket": "slipi-prototype.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010192054884:android:1b6b6c09f564bea4287d71",
+        "android_client_info": {
+          "package_name": "com.slipi.slipiprototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010192054884-d6bihhebj60s431ssqb28gm69coagj50.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDEqZtLk6WfFZdjAPQ0xHTlOFzDlt717c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010192054884-d6bihhebj60s431ssqb28gm69coagj50.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
