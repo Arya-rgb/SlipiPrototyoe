@@ -11,4 +11,6 @@
     <string name="text_approval">Approval</string>
     <string name="email_not_valid">Email Not Valid</string>
     <string name="password_not_valid">Password Not Valid</string>
+    <string name="text_don_t_have_account_sign_up_here">Don\'t Have Account ? Sign Up Here</string>
+    <string name="text_how_are_you_today">How Are You Today ?</string>
 </resources>
