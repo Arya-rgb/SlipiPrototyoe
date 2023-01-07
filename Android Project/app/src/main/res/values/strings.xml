@@ -17,4 +17,10 @@
     <string name="text_register_here">Register Here ✍</string>
     <string name="text_use_your_email_and_password">Use Your Email And Password</string>
     <string name="text_already_have_an_account_login_here">Already Have An Account ? Login Here</string>
+    <string name="text_register">Register</string>
+    <string name="text_masuk">Masuk</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

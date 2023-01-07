@@ -153,7 +153,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/bg_rounded_primary"
-        android:text="Masuk"
+        android:text="@string/text_masuk"
         android:enabled="false"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"

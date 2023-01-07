@@ -132,7 +132,7 @@
 
 
     <TextView
-        android:id="@+id/sign_up_nav"
+        android:id="@+id/sign_in_nav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -142,10 +142,10 @@
         android:text="@string/text_already_have_an_account_login_here"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_login" />
+        app:layout_constraintTop_toBottomOf="@+id/button_register" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button_login"
+        android:id="@+id/button_register"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="12dp"
@@ -153,7 +153,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/bg_rounded_primary"
-        android:text="Masuk"
+        android:text="@string/text_register"
         android:enabled="false"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -161,7 +161,7 @@
         app:layout_constraintTop_toBottomOf="@+id/auto_generate_password" />
 
     <ProgressBar
-        android:id="@+id/progressBarLogin"
+        android:id="@+id/progressBarRegister"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
