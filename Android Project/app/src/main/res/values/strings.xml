@@ -13,4 +13,8 @@
     <string name="password_not_valid">Password Not Valid</string>
     <string name="text_don_t_have_account_sign_up_here">Don\'t Have Account ? Sign Up Here</string>
     <string name="text_how_are_you_today">How Are You Today ?</string>
+    <string name="text_signup">Sign Up</string>
+    <string name="text_register_here">Register Here ✍</string>
+    <string name="text_use_your_email_and_password">Use Your Email And Password</string>
+    <string name="text_already_have_an_account_login_here">Already Have An Account ? Login Here</string>
 </resources>

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
 import com.slipi.slipiprototype.databinding.ActivityRegisterBinding
+import kotlin.math.floor
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -17,7 +18,20 @@ class RegisterActivity : AppCompatActivity() {
         _binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
 
+        binding.navBackRegister.setOnClickListener {
+            finish()
+        }
+
+        binding.autoGeneratePassword.setOnClickListener {
+            val chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            var passWord = ""
+            for (i in 0..10) {
+                passWord += chars[floor(Math.random() * chars.length).toInt()]
+            }
+            binding.edtPassword.setText(passWord)
+        }
 
     }
 }
