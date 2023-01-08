@@ -1,7 +1,10 @@
 package com.slipi.slipiprototype.core.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.slipi.slipiprototype.core.data.source.local.LocalDataSource
 import com.slipi.slipiprototype.core.data.source.remote.RemoteDataSource
+import com.slipi.slipiprototype.core.data.source.remote.network.ApiResponse
 import com.slipi.slipiprototype.core.data.source.remote.response.DataUserResponse
 import com.slipi.slipiprototype.core.domain.model.DataUserDomain
 import com.slipi.slipiprototype.core.domain.model.UserData
@@ -20,9 +23,29 @@ class SlipiRepository private constructor(
         appExecutors.networkIO().execute { remoteDataSource.saveUserData(dataResponse) }
     }
 
-
     override fun setDataUserToDatabase(userdata: UserData) {
     }
+
+    override fun getDataUser(): LiveData<Resource<DataUserDomain>> =
+        object : NetworkBoundResource<DataUserDomain, DataUserResponse>(appExecutors) {
+            override fun loadFromDB(): LiveData<DataUserDomain> {
+                TODO("Not yet implemented")
+            }
+
+            override fun shouldFetch(data: DataUserDomain?): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun createCall(): LiveData<ApiResponse<DataUserResponse>> {
+                TODO("Not yet implemented")
+            }
+
+            override fun saveCallResult(data: DataUserResponse) {
+                TODO("Not yet implemented")
+            }
+
+        }.asLiveData()
+
 
     companion object {
         @Volatile
