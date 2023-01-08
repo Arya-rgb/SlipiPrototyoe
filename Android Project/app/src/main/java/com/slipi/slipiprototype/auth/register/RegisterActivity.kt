@@ -14,15 +14,16 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import com.slipi.slipiprototype.R
 import com.slipi.slipiprototype.auth.login.LoginActivity
+import com.slipi.slipiprototype.core.domain.model.DataUserDomain
+import com.slipi.slipiprototype.core.ui.ViewModelFactory
 import com.slipi.slipiprototype.databinding.ActivityRegisterBinding
-import com.slipi.slipiprototype.home.HomeActivity
 import io.reactivex.Observable
 import kotlin.math.floor
 
@@ -30,6 +31,8 @@ class RegisterActivity : AppCompatActivity() {
 
     private var _binding: ActivityRegisterBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var registerViewModel: RegisterViewModel
 
     private val firebaseAuth = FirebaseAuth.getInstance()
 
@@ -45,6 +48,10 @@ class RegisterActivity : AppCompatActivity() {
                 android.R.color.darker_gray
             )
         )
+
+        //initialize viewmodel
+        val factory = ViewModelFactory.getInstance(this)
+        registerViewModel = ViewModelProvider(this, factory)[RegisterViewModel::class.java]
 
         supportActionBar?.hide()
 
@@ -127,6 +134,13 @@ class RegisterActivity : AppCompatActivity() {
     private fun uploadDataToFireStore(role: String) {
         DynamicToast.makeSuccess(this@RegisterActivity, "Success").show();
         //if success move to login activity
+        registerViewModel.setDataToFireStore(DataUserDomain(
+            binding.edtEmail.text.toString().trim(),
+            binding.edtPassword.text.toString().trim(),
+            role,
+            com.google.firebase.Timestamp.now(),
+            com.google.firebase.Timestamp.now()
+        ))
         startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
     }
 
