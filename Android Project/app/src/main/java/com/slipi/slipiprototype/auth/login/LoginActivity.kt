@@ -153,7 +153,8 @@ class LoginActivity : AppCompatActivity() {
         )
             .addOnSuccessListener {
                 binding.progressBarLogin.visibility = View.GONE
-                loginViewModel.getData()
+
+                mAuth.uid?.let { it1 -> loginViewModel.getData(it1) }
                 checkRole(role)
             }
             .addOnFailureListener {

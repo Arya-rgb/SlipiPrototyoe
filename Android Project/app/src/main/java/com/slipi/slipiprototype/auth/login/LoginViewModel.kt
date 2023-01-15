@@ -36,9 +36,10 @@ class LoginViewModel(slipiUseCase: SlipiUseCase) : ViewModel() {
         MutableLiveData<Boolean>()
     }
 
-    fun getData() {
-        val docRef = db.collection(Constant.userDb).document(id!!.uid)
-        docRef.get().addOnSuccessListener {
+    fun getData(id: String) {
+        try {
+            val docRef = db.collection(Constant.userDb).document(id)
+            docRef.get().addOnSuccessListener {
                 val product = DataUserResponse(
                     username = it.data?.get("username") as String,
                     password = "none",
@@ -49,9 +50,12 @@ class LoginViewModel(slipiUseCase: SlipiUseCase) : ViewModel() {
                 )
                 getLiveData.postValue(product)
 
-        }.addOnFailureListener {
-            Log.d("get", it.localizedMessage!!)
-            getLiveData.postValue(null)
+            }.addOnFailureListener {
+                Log.d("get", it.localizedMessage!!)
+                getLiveData.postValue(null)
+            }
+        } catch (e: java.lang.NullPointerException) {
+            Log.d("test", e.message.toString())
         }
     }
 
