@@ -3,6 +3,7 @@ package com.slipi.slipiprototype.core.ui
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.slipi.slipiprototype.auth.login.LoginViewModel
 import com.slipi.slipiprototype.auth.register.RegisterViewModel
 import com.slipi.slipiprototype.core.di.Injection
 import com.slipi.slipiprototype.core.domain.usecase.SlipiUseCase
@@ -16,6 +17,9 @@ class ViewModelFactory private constructor(private val slipiUseCase: SlipiUseCas
         when {
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(slipiUseCase) as T
+            }
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
+                LoginViewModel(slipiUseCase) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }

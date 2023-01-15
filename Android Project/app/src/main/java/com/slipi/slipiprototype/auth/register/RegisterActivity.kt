@@ -136,7 +136,7 @@ class RegisterActivity : AppCompatActivity() {
         //if success move to login activity
         registerViewModel.setDataToFireStore(DataUserDomain(
             binding.edtEmail.text.toString().trim(),
-            binding.edtPassword.text.toString().trim(),
+            "none",
             role,
             com.google.firebase.Timestamp.now(),
             com.google.firebase.Timestamp.now()

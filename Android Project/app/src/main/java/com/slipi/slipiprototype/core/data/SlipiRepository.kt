@@ -24,24 +24,27 @@ class SlipiRepository private constructor(
     }
 
     override fun setDataUserToDatabase(userdata: UserData) {
+
     }
 
     override fun getDataUser(): LiveData<Resource<DataUserDomain>> =
         object : NetworkBoundResource<DataUserDomain, DataUserResponse>(appExecutors) {
-            override fun loadFromDB(): LiveData<DataUserDomain> {
-                TODO("Not yet implemented")
-            }
-
             override fun shouldFetch(data: DataUserDomain?): Boolean {
-                TODO("Not yet implemented")
+                return false
             }
 
-            override fun createCall(): LiveData<ApiResponse<DataUserResponse>> {
-                TODO("Not yet implemented")
-            }
+            override fun createCall(): LiveData<ApiResponse<DataUserResponse>> =
+                remoteDataSource.getUserData()
 
             override fun saveCallResult(data: DataUserResponse) {
-                TODO("Not yet implemented")
+                val userData = DataMapper.mapResponseToEntity(data)
+                localDataSource.insertData(userData)
+            }
+
+            override fun loadFromDB(): LiveData<DataUserDomain> {
+                return Transformations.map(localDataSource.getUserDataFromLocalDB()) {
+                    DataMapper.mapEntitiesToDomain(it)
+                }
             }
 
         }.asLiveData()

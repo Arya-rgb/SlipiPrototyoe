@@ -6,15 +6,15 @@ import java.security.Timestamp
 
 @IgnoreExtraProperties
 data class DataUserResponse(
-    var username: String? = null,
-    var password: String? = null,
-    var role: String? = null,
+    var username: String,
+    var password: String,
+    var role: String,
     var create_date: com.google.firebase.Timestamp,
     var update_date: com.google.firebase.Timestamp
 ) {
     @Exclude
-    fun toMap(): Map<String, Any?> {
-        return mapOf(
+    fun toMap(): HashMap<String, Any?> {
+        return hashMapOf(
             "username" to username,
             "password" to password,
             "role" to role,
