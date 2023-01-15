@@ -59,6 +59,8 @@ class HomeActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = binding.navView
 
+        navView.menu.findItem(R.id.navigation_camera).isEnabled = false
+
         binding.imageNavCamera.setOnClickListener {
             Intent(this@HomeActivity, CameraActivity::class.java).also {
                 startActivity(it)
