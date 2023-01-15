@@ -122,9 +122,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:gravity="end"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
+        android:gravity="end"
         android:text="Forgot Password ?"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -136,10 +135,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:gravity="center"
         android:text="@string/text_don_t_have_account_sign_up_here"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_login" />
@@ -148,17 +147,17 @@
         android:id="@+id/button_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="12dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/bg_rounded_primary"
-        android:text="@string/text_masuk"
         android:enabled="false"
+        android:padding="12dp"
+        android:text="@string/text_masuk"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_forgot_pass" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_client" />
 
     <ProgressBar
         android:id="@+id/progressBarLogin"
@@ -170,5 +169,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Client"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+
+    <TextView
+        android:id="@+id/edt_client"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_edittext"
+        android:gravity="center_vertical"
+        android:hint="Client"
+        android:paddingHorizontal="24dp"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edt_client"
+        app:layout_constraintEnd_toEndOf="@+id/edt_client"
+        app:layout_constraintTop_toTopOf="@+id/edt_client"
+        app:srcCompat="@drawable/img_dropdown" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

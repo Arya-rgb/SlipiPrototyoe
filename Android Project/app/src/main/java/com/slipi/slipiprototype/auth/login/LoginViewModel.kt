@@ -43,6 +43,7 @@ class LoginViewModel(slipiUseCase: SlipiUseCase) : ViewModel() {
                     username = it.data?.get("username") as String,
                     password = "none",
                     role = it.data?.get("role") as String,
+                    client = it.data?.get("client") as String,
                     create_date = it.data?.get("create_date") as Timestamp,
                     update_date = it.data?.get("update_date") as Timestamp
                 )

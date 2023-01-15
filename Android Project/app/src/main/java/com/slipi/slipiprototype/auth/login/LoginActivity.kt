@@ -25,6 +25,7 @@ import com.slipi.slipiprototype.R
 import com.slipi.slipiprototype.auth.register.RegisterActivity
 import com.slipi.slipiprototype.auth.register.RegisterViewModel
 import com.slipi.slipiprototype.core.data.Resource
+import com.slipi.slipiprototype.core.data.source.local.preference.SharedPrefAuth
 import com.slipi.slipiprototype.core.ui.ViewModelFactory
 import com.slipi.slipiprototype.home.HomeActivity
 import io.reactivex.Observable
@@ -38,6 +39,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
 
     private lateinit var loginViewModel: LoginViewModel
+    private lateinit var sharedprefAuth: SharedPrefAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +53,8 @@ class LoginActivity : AppCompatActivity() {
                 android.R.color.darker_gray
             )
         )
+
+        sharedprefAuth = SharedPrefAuth(this@LoginActivity)
 
         binding.signUpNav.setOnClickListener {
             startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
@@ -69,6 +73,36 @@ class LoginActivity : AppCompatActivity() {
         val factory = ViewModelFactory.getInstance(this)
         loginViewModel = ViewModelProvider(this, factory)[LoginViewModel::class.java]
 
+        binding.edtClient.setOnClickListener {
+            showBottomSheetClient()
+        }
+
+    }
+
+    private fun showBottomSheetClient() {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.bottom_sheet_client)
+        val cluster: TextView = dialog.findViewById(R.id.choose_cluster)
+        val parking: TextView = dialog.findViewById(R.id.choose_parking)
+        val close: ImageView = dialog.findViewById(R.id.close_bottom_sheet)
+        cluster.setOnClickListener {
+            binding.edtClient.text = "Cluster"
+            dialog.dismiss()
+        }
+        parking.setOnClickListener {
+            binding.edtClient.text = "Parking"
+            dialog.dismiss()
+        }
+        close.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+        dialog.window?.setGravity(Gravity.BOTTOM)
     }
 
     private fun showBottomSheetRole() {
@@ -149,12 +183,14 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel.getLiveData.observe(this) {
 
-            if (it.role == role) {
-                DynamicToast.makeSuccess(this@LoginActivity, "Login Success").show()
+            if (it.role != role) {
+                DynamicToast.makeError(this@LoginActivity, "Role Doesn't Match").show()
+            } else if (it.client != binding.edtClient.text.toString().trim()) {
+                DynamicToast.makeError(this@LoginActivity, "Client does'nt Match").show()
+            } else {
+                sharedprefAuth.saveState()
                 startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                 finish()
-            } else {
-                DynamicToast.makeError(this@LoginActivity, "Role does'nt Match").show()
             }
         }
 

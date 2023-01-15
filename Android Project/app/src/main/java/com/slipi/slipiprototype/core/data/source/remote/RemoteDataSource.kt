@@ -42,6 +42,7 @@ class RemoteDataSource private constructor(private var db: Firebase) {
                     item.data!!["username"] as String,
                     item.data!!["password"] as String,
                     item.data!!["role"] as String,
+                    item.data!!["role"] as String,
                     item.data!!["create_date"] as Timestamp,
                     item.data!!["update_date"] as Timestamp
                 )

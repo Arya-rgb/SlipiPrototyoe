@@ -7,7 +7,6 @@ import com.slipi.slipiprototype.auth.login.LoginViewModel
 import com.slipi.slipiprototype.auth.register.RegisterViewModel
 import com.slipi.slipiprototype.core.di.Injection
 import com.slipi.slipiprototype.core.domain.usecase.SlipiUseCase
-import com.slipi.slipiprototype.home.ui.home.HomeViewModel
 
 class ViewModelFactory private constructor(private val slipiUseCase: SlipiUseCase) :
     ViewModelProvider.NewInstanceFactory() {

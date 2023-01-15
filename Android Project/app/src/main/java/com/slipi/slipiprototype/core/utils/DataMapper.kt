@@ -14,6 +14,7 @@ object DataMapper {
         input.username,
         input.password,
         input.role,
+        input.client,
         input.create_date,
         input.update_date
     )
@@ -22,6 +23,7 @@ object DataMapper {
         input.username,
         input.password,
         input.role,
+        input.client,
         input.create_date,
         input.update_date
     )
@@ -40,6 +42,7 @@ object DataMapper {
             input.username,
             input.password,
             input.role,
+            "aa",
             Timestamp.now(),
             Timestamp.now()
         )

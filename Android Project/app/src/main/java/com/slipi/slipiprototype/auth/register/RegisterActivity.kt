@@ -76,8 +76,38 @@ class RegisterActivity : AppCompatActivity() {
             startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
         }
 
+        binding.edtClient.setOnClickListener {
+            showChooseClient()
+        }
+
         reactiveValidation()
 
+    }
+
+    private fun showChooseClient() {
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.bottom_sheet_client)
+        val cluster: TextView = dialog.findViewById(R.id.choose_cluster)
+        val parking: TextView = dialog.findViewById(R.id.choose_parking)
+        val close: ImageView = dialog.findViewById(R.id.close_bottom_sheet)
+        cluster.setOnClickListener {
+            binding.edtClient.text = "Cluster"
+            dialog.dismiss()
+        }
+        parking.setOnClickListener {
+            binding.edtClient.text = "Parking"
+            dialog.dismiss()
+        }
+        close.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+        dialog.window?.setGravity(Gravity.BOTTOM)
     }
 
     private fun showBottomSheetChooseRole() {
@@ -132,12 +162,13 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun uploadDataToFireStore(role: String) {
-        DynamicToast.makeSuccess(this@RegisterActivity, "Success").show();
+        DynamicToast.makeSuccess(this@RegisterActivity, "Success").show()
         //if success move to login activity
         registerViewModel.setDataToFireStore(DataUserDomain(
             binding.edtEmail.text.toString().trim(),
             "none",
             role,
+            binding.edtClient.text.toString().trim(),
             com.google.firebase.Timestamp.now(),
             com.google.firebase.Timestamp.now()
         ))

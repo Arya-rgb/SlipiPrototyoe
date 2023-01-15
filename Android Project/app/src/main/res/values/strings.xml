@@ -23,4 +23,12 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_history">History</string>
+    <string name="text_camera">Camera</string>
+    <string name="text_inbox">Inbox</string>
+    <string name="text_account">Account</string>
+    <string name="text_cluster">Cluster</string>
+    <string name="text_parking">Parking</string>
 </resources>
