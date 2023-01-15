@@ -21,6 +21,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import com.slipi.slipiprototype.R
 import com.slipi.slipiprototype.auth.login.LoginActivity
+import com.slipi.slipiprototype.auth.resetpassword.AccountActivationActivity
 import com.slipi.slipiprototype.core.domain.model.DataUserDomain
 import com.slipi.slipiprototype.core.ui.ViewModelFactory
 import com.slipi.slipiprototype.databinding.ActivityRegisterBinding
@@ -147,7 +148,7 @@ class RegisterActivity : AppCompatActivity() {
 
         firebaseAuth.createUserWithEmailAndPassword(
             binding.edtEmail.text.toString().trim(),
-            binding.edtEmail.text.toString().trim()
+            binding.edtPassword.text.toString().trim()
         )
             .addOnSuccessListener {
                 binding.progressBarRegister.visibility = View.GONE

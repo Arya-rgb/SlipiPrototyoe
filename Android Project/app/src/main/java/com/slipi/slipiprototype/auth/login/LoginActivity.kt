@@ -24,6 +24,7 @@ import com.pranavpandey.android.dynamic.toasts.DynamicToast
 import com.slipi.slipiprototype.R
 import com.slipi.slipiprototype.auth.register.RegisterActivity
 import com.slipi.slipiprototype.auth.register.RegisterViewModel
+import com.slipi.slipiprototype.auth.resetpassword.ResetPasswordActivity
 import com.slipi.slipiprototype.core.data.Resource
 import com.slipi.slipiprototype.core.data.source.local.preference.SharedPrefAuth
 import com.slipi.slipiprototype.core.ui.ViewModelFactory
@@ -62,6 +63,12 @@ class LoginActivity : AppCompatActivity() {
 
         binding.buttonLogin.setOnClickListener {
             showBottomSheetRole()
+        }
+
+        binding.tvForgotPass.setOnClickListener {
+            Intent(this@LoginActivity, ResetPasswordActivity::class.java).also {
+                startActivity(it)
+            }
         }
 
         supportActionBar?.hide()
@@ -146,6 +153,7 @@ class LoginActivity : AppCompatActivity() {
         )
             .addOnSuccessListener {
                 binding.progressBarLogin.visibility = View.GONE
+                loginViewModel.getData()
                 checkRole(role)
             }
             .addOnFailureListener {
@@ -179,18 +187,18 @@ class LoginActivity : AppCompatActivity() {
 //            }
 //        }
 
-        loginViewModel.getData()
-
         loginViewModel.getLiveData.observe(this) {
 
             if (it.role != role) {
                 DynamicToast.makeError(this@LoginActivity, "Role Doesn't Match").show()
             } else if (it.client != binding.edtClient.text.toString().trim()) {
-                DynamicToast.makeError(this@LoginActivity, "Client does'nt Match").show()
+                DynamicToast.makeError(this@LoginActivity, "Client Doesn't Match").show()
             } else {
-                sharedprefAuth.saveState()
-                startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
-                finish()
+                Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
+                    startActivity(intent)
+                    finish()
+                    sharedprefAuth.saveState()
+                }
             }
         }
 

@@ -31,4 +31,5 @@
     <string name="text_account">Account</string>
     <string name="text_cluster">Cluster</string>
     <string name="text_parking">Parking</string>
+    <string name="text_forgot_password">Forgot Password</string>
 </resources>

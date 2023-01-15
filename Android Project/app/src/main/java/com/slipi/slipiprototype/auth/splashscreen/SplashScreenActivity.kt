@@ -22,7 +22,7 @@ class SplashScreenActivity : AppCompatActivity() {
     private var _binding: ActivitySplashScreenBinding? = null
     private val binding get() = _binding!!
     private lateinit var sharedprefAuth: SharedPrefAuth
-    private lateinit var firebaseAuth : FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,23 +35,16 @@ class SplashScreenActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        if (sharedprefAuth.getState() && firebaseAuth.currentUser != null) {
-            Handler(Looper.getMainLooper()).postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (sharedprefAuth.getState() && firebaseAuth.currentUser != null) {
                 val myIntent = Intent(this, HomeActivity::class.java)
                 startActivity(myIntent)
-                finish()
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                finish()
-            }, 3000)
-        } else {
-            Handler(Looper.getMainLooper()).postDelayed({
+            } else {
                 val myIntent = Intent(this, LoginActivity::class.java)
                 startActivity(myIntent)
-                finish()
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                finish()
-            }, 3000)
-        }
+            }
+            finish()
+        }, 3000)
     }
 
     private fun setupView() {
