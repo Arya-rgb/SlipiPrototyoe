@@ -3,6 +3,7 @@ package com.slipi.slipiprototype.camera
 import android.Manifest
 import android.app.Fragment
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
 import android.hardware.camera2.CameraAccessException
@@ -10,17 +11,16 @@ import android.hardware.camera2.CameraManager
 import android.media.Image
 import android.media.ImageReader
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.Size
 import android.util.TypedValue
 import android.view.Surface
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
+import androidx.appcompat.app.AppCompatActivity
 import com.slipi.slipiprototype.R
 import com.slipi.slipiprototype.databinding.ActivityCameraBinding
 import com.slipi.slipiprototype.ml.detectormachine.Detector
@@ -31,11 +31,15 @@ import com.slipi.slipiprototype.ml.drawing.OverlayView
 import com.slipi.slipiprototype.ml.livefeed.CameraConnectionFragment
 import com.slipi.slipiprototype.ml.livefeed.ImageUtils.convertYUV420ToARGB8888
 import com.slipi.slipiprototype.ml.livefeed.ImageUtils.getTransformationMatrix
+import com.slipi.slipiprototype.ml.livefeed.JavaImageUtils
+import com.slipi.slipiprototype.result.ResultActivity
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
+
+open class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener {
 
     private var _binding: ActivityCameraBinding? = null
     private val binding get() = _binding!!
@@ -54,9 +58,6 @@ class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener
     private var borderedText: BorderedText? = null
 
     private lateinit var cameraExecutor: ExecutorService
-
-    private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-    private var imageCapture: ImageCapture? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +79,7 @@ class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener
                 //TODO show live camera footage
                 setFragment()
             }
-        }else{
+        } else {
             //TODO show live camera footage
             setFragment()
         }
@@ -103,7 +104,7 @@ class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         //TODO show live camera footage
@@ -119,7 +120,7 @@ class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener
     var previewHeight = 0
     var previewWidth = 0
     private var sensorOrientation = 0
-    protected fun setFragment() {
+    private fun setFragment() {
         val manager =
             getSystemService(Context.CAMERA_SERVICE) as CameraManager
         var cameraId: String? = null
@@ -132,7 +133,7 @@ class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener
         val camera2Fragment = CameraConnectionFragment.newInstance(
             object :
                 CameraConnectionFragment.ConnectionCallback {
-                override fun onPreviewSizeChosen(size: Size?, rotation: Int) {
+                override fun onPreviewSizeChosen(size: Size?, cameraRotation: Int) {
                     previewHeight = size!!.height
                     previewWidth = size.width
                     val textSizePx = TypedValue.applyDimension(
@@ -147,8 +148,9 @@ class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener
                     val cropSize = 300
                     previewWidth = size.width
                     previewHeight = size.height
-                    sensorOrientation = rotation - getScreenOrientation()
+                    sensorOrientation = cameraRotation - getScreenOrientation()
                     croppedBitmap = Bitmap.createBitmap(cropSize, cropSize, Bitmap.Config.ARGB_8888)
+                    bitmap2 = Bitmap.createBitmap(cropSize, cropSize, Bitmap.Config.ARGB_8888)
 
                     frameToCropTransform = getTransformationMatrix(
                         previewWidth, previewHeight,
@@ -167,11 +169,12 @@ class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener
                             }
                         })
                     tracker!!.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation)
+
                 }
             },
             this,
             R.layout.camera_fragment,
-            Size(640, 480)
+            Size(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         )
         camera2Fragment.setCamera(cameraId)
         fragment = camera2Fragment
@@ -233,37 +236,73 @@ class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener
         }
     }
 
-
     var croppedBitmap: Bitmap? = null
+    var bitmap2: Bitmap? = null
     private var tracker: MultiBoxTracker? = null
+
     @RequiresApi(Build.VERSION_CODES.N)
     fun processImage() {
-        imageConverter!!.run()
-        rgbFrameBitmap =
-            Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888)
-        rgbFrameBitmap!!.setPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight)
 
-        val canvas = Canvas(croppedBitmap!!)
-        canvas.drawBitmap(rgbFrameBitmap!!, frameToCropTransform!!, null)
+        Thread {
+            imageConverter!!.run()
+            rgbFrameBitmap =
+                Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888)
+            rgbFrameBitmap!!.setPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight)
 
-        //TODO pass image to model and get results
-        val results = detector!!.recognizeImage(croppedBitmap)
-        results.removeIf { t->t.confidence<minimumConfidence }
-        for (result in results) {
-            val location: RectF = result.getLocation()
-            cropToFrameTransform!!.mapRect(location)
-            result.setLocation(location)
-        }
+            val canvas = Canvas(croppedBitmap!!)
+            canvas.drawBitmap(rgbFrameBitmap!!, frameToCropTransform!!, null)
 
-        tracker?.trackResults(results, 10)
-        trackingOverlay?.postInvalidate()
-        postInferenceCallback!!.run()
+            //TODO pass image to model and get results
+            val results = detector!!.recognizeImage(croppedBitmap)
+            results.removeIf { t -> t.confidence < minimumConfidence }
+            for (result in results) {
+                val location: RectF = result.location
+                cropToFrameTransform!!.mapRect(location)
+                result.location = location
+
+                if (result.confidence >= 0.8f) {
+
+                    val bitmapCropped = cropImage(croppedBitmap!!, result.location)
+
+                    val stream = ByteArrayOutputStream()
+                    croppedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                    val byteArray: ByteArray = stream.toByteArray()
+
+                    val intent = Intent(this, ResultActivity::class.java)
+                    intent.putExtra("picture", byteArray)
+                    startActivity(intent)
+
+                }
+
+            }
+            tracker?.trackResults(results, 5)
+            trackingOverlay?.postInvalidate()
+            postInferenceCallback!!.run()
+        }.start()
+
 
     }
 
-    protected fun fillBytes(
+    fun cropImage(originalBitmap: Bitmap, rectF: RectF): Bitmap {
+        // Calculate the actual crop rectangle based on the RectF values
+        val actualRect = Rect(rectF.left.toInt(), rectF.top.toInt(), rectF.right.toInt(), rectF.bottom.toInt())
+
+        // Create a new bitmap with the cropped image
+        val croppedBitmap = Bitmap.createBitmap(actualRect.width(), actualRect.height(), Bitmap.Config.ARGB_8888)
+
+        // Create a canvas object with the cropped bitmap
+        val canvas = Canvas(croppedBitmap)
+
+        // Draw the original bitmap onto the canvas with the crop rectangle
+        canvas.drawBitmap(originalBitmap, actualRect, Rect(0, 0, actualRect.width(), actualRect.height()), null)
+
+        // Return the cropped bitmap
+        return croppedBitmap
+    }
+
+    private fun fillBytes(
         planes: Array<Image.Plane>,
-        yuvBytes: Array<ByteArray?>
+        yuvBytes: Array<ByteArray?>,
     ) {
         // Because of the variable row stride it's not possible to know in
         // advance the actual necessary dimensions of the yuv planes.
@@ -272,7 +311,7 @@ class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener
             if (yuvBytes[i] == null) {
                 yuvBytes[i] = ByteArray(buffer.capacity())
             }
-            buffer[yuvBytes[i]]
+            buffer[yuvBytes[i]!!]
         }
     }
 
@@ -283,10 +322,6 @@ class CameraActivity : AppCompatActivity(), ImageReader.OnImageAvailableListener
             Surface.ROTATION_90 -> 90
             else -> 0
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
 

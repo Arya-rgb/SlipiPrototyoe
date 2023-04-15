@@ -84,4 +84,9 @@ dependencies {
     implementation "androidx.camera:camera-view:1.1.0-beta03"
 
     implementation 'org.tensorflow:tensorflow-lite-task-vision:0.3.0'
+
+    // Text features
+
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+    implementation 'com.google.mlkit:vision-common:17.3.0'
 }

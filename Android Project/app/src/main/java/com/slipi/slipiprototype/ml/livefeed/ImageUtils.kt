@@ -1,7 +1,6 @@
 package com.slipi.slipiprototype.ml.livefeed
 
-import android.graphics.Bitmap
-import android.graphics.Matrix
+import android.graphics.*
 import android.os.Environment
 import java.io.File
 import java.io.FileOutputStream
@@ -109,15 +108,16 @@ object ImageUtils {
     }
 
     fun convertYUV420ToARGB8888(
-            yData: ByteArray,
-            uData: ByteArray,
-            vData: ByteArray,
-            width: Int,
-            height: Int,
-            yRowStride: Int,
-            uvRowStride: Int,
-            uvPixelStride: Int,
-            out: IntArray) {
+        yData: ByteArray,
+        uData: ByteArray,
+        vData: ByteArray,
+        width: Int,
+        height: Int,
+        yRowStride: Int,
+        uvRowStride: Int,
+        uvPixelStride: Int,
+        out: IntArray,
+    ) {
         var yp = 0
         for (j in 0 until height) {
             val pY = yRowStride * j
@@ -130,12 +130,13 @@ object ImageUtils {
     }
 
     fun getTransformationMatrix(
-            srcWidth: Int,
-            srcHeight: Int,
-            dstWidth: Int,
-            dstHeight: Int,
-            applyRotation: Int,
-            maintainAspectRatio: Boolean): Matrix {
+        srcWidth: Int,
+        srcHeight: Int,
+        dstWidth: Int,
+        dstHeight: Int,
+        applyRotation: Int,
+        maintainAspectRatio: Boolean,
+    ): Matrix {
         val matrix = Matrix()
         if (applyRotation != 0) {
             if (applyRotation % 90 != 0) {
@@ -175,5 +176,6 @@ object ImageUtils {
         }
         return matrix
     }
+
 }
 
